@@ -111,7 +111,7 @@ function App() {
                             <TableBody>
                                 {transactions.map((row) => (
                                     <TableRow
-                                        key={index}
+                                        key={row.index}
                                         sx={{'&:last-child td, &:last-child th': {border: 0}}}
                                     >
                                         <TableCell align="right">{row.to}</TableCell>
@@ -132,8 +132,6 @@ function App() {
                             </TableHead>
                             <TableBody>
                                     <TableRow
-                                        key={index}
-                                        sx={{'&:last-child td, &:last-child th': {border: 0}}}
                                     >
                                         <TableCell align="right">{ratios[0]}</TableCell>
                                         <TableCell align="right">{ratios[1]}</TableCell>
