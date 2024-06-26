@@ -23,7 +23,7 @@ function App() {
     const [provider, setProvider] = useState(null);
     const [searching, setSearching] = useState(false);
     const [transactions, setTransactions] = useState([]);
-    const [ratios, setRatios] = useState((0, 0))
+    const [ratios, setRatios] = useState([0, 0])
     const [eth_addr, setAddress] = useState("")
     const [api_key, setAPI] = useState("")
 
@@ -87,7 +87,7 @@ function App() {
         <React.Fragment>
             <CssBaseline/>
             <Container maxWidth="sm">
-                <Box sx={{bgcolor: '#cfe8fc', height: '100vh', m: 1, width: '25ch'}}
+                <Box sx={{height: '100vh', m: 1, width: '25ch'}}
                      autoComplete="off">
                     <TextField id="addr_input" label="Outlined" variant="outlined" value={eth_addr}
                                onChange={handleAddr}></TextField>
@@ -99,7 +99,7 @@ function App() {
             </Container>
             {searching &&
                 <Container maxWidth="sm">
-                    <TableContainer component={Paper}>
+                    <TableContainer component={Paper} sx={{minWidth: 650}}>
                         <Table sx={{minWidth: 650}} aria-label="transactions_table">
                             <TableHead>
                                 <TableRow>
@@ -122,7 +122,7 @@ function App() {
                             </TableBody>
                         </Table>
                     </TableContainer>
-                    <TableContainer component={Paper}>
+                    <TableContainer component={Paper} sx={{minWidth: 650}}>
                         <Table sx={{minWidth: 650}} aria-label="ratios table">
                             <TableHead>
                                 <TableRow>
