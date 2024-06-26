@@ -3,9 +3,14 @@ pragma solidity ^0.8.0;
 
 import "@chainlink/contracts/src/v0.8/ChainlinkClient.sol";
 import "github.com/Arachnid/solidity-stringutils/strings.sol";
+import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
 contract Blacklist{
     mapping(address => bool) public isBlacklisted;
+}
+
+contract Certificate is ERC721{
+    constructor() ERC721("SainRankCertificate", "SRCERT") {}
 }
 
 contract sainoracle is ChainlinkClient{
