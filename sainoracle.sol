@@ -37,7 +37,7 @@ contract sainoracle is ChainlinkClient{
     string private tr_task_url_2 = "&startblock=0&endblock=99999999&page=1&offset=10&sort=asc&apikey=";
           
     // storage for the transaction data, needs to be refreshed as the contract can only store one wallets data at a time      
-    TR[] public transactions;     
+    TR[] private transactions;
 
     constructor (){
         owner = msg.sender;
@@ -251,6 +251,10 @@ contract sainoracle is ChainlinkClient{
             }
         }
         return (in_out_ratio, in_out_count);
+    }
+
+    function getTRsList() public returns(TR[] storage){
+        return transactions;
     }
 }
 
