@@ -89,6 +89,7 @@ function App() {
             <Container maxWidth="sm">
                 <Box sx={{height: '100vh', m: 1, width: '25ch'}}
                      autoComplete="off">
+                    <h1>SainRank Algorithm</h1>
                     <TextField id="addr_input" label="Outlined" variant="outlined" value={eth_addr}
                                onChange={handleAddr}></TextField>
                     <TextField id="api_input" label="Outlined" variant="outlined" value={api_key}
