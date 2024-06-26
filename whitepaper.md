@@ -1,4 +1,5 @@
 # Anonymous Blockchain Verification Algorithm: SainRank
+V.1.5
 
 ## Abstract
 
@@ -95,12 +96,12 @@ SainRank initiates at a predetermined depth, typically set between 3 and 5 level
 
 Transaction weights decrease at each lower level of recursion according to the following formula:
 
-W(l) = β^l
+W(l) = β*l
 
 Where:
 - W(l) is the weight at recursion level l
-- β is the base factor (typically set between 0.7 and 0.9)
-- l is the current recursion level (0 for the target wallet)
+- β is the base factor 
+- l is the current recursion level (5 for the target wallet)
 
 This approach ensures that wallets closer to the target have a more significant impact on the final trust score while still considering the broader network of interactions.
 
@@ -226,6 +227,12 @@ Develop methods to aggregate trust scores across multiple blockchain networks fo
 
 Research ways to make SainRank compatible with evolving regulatory requirements while preserving its core privacy-preserving features.
 
-## References
+### 10.6 SainRank-2-S&P
 
-[List relevant academic papers, technical documentation, and other sources that informed the development of SainRank]
+Develop a mapping mode based on percentages and distribution amongst all SRCERT to translate SainRank ratings to TradFi AAA-D rating scale
+
+### 10.7 NFT Certificates
+
+Integrate ERC721 tokens to be used as visual certificates, with hosting on decentralized storage solutions allowing for marketing and display use of SRCERT
+
+## References
