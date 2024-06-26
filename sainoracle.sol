@@ -3,10 +3,13 @@ pragma solidity ^0.8.0;
 
 import "@chainlink/contracts/src/v0.8/ChainlinkClient.sol";
 import "github.com/Arachnid/solidity-stringutils/strings.sol";
+import "0x97044531D0fD5B84438499A49629488105Dc58e6" as bl;
 
 contract sainoracle is ChainlinkClient{
     using Chainlink for Chainlink.Request;
     using strings for *;
+
+    bl.Blacklist blist = new blacklist();
     
     struct TR{
         string from;
@@ -28,6 +31,7 @@ contract sainoracle is ChainlinkClient{
     uint totalOut =0;
     uint inCount = 0;
     uint outCount = 0;
+    uint trust = 0;
     uint ratio;
     uint countir;
 
@@ -168,12 +172,8 @@ contract sainoracle is ChainlinkClient{
         }
     }  
 
-    function calculateTRRatio(string calldata eth_addr, string calldata api_key) public returns(uint256, uint256, TR[]){
+    function calculateTRRatio(string calldata eth_addr, string calldata api_key) public returns(uint256, uint256, uint256, TR[]){
         requestTransactionData(eth_addr, api_key);
-        totalIn =0;
-        totalOut =0;
-        inCount = 0;
-        outCount = 0;
         string[] memory others = new string[](transactions.length);
         for(uint i = 0; i < transactions.length; i++){
             if(transactions[i].to.toSlice().equals(eth_addr.toSlice())){
@@ -191,6 +191,13 @@ contract sainoracle is ChainlinkClient{
 
         uint in_out_ratio = 5*totalIn / totalOut;
         uint in_out_count = 5*inCount / outCount;
+        uint trust = 0;
+
+        if(blist.isBlacklisted(eth_addr)){
+            trust += in_out_count*in_out_ratio / 90;
+        }else{
+            trust += in_out_ratio*in_out_count;
+        }
 
         for(uint i = 0; i < others.length; i++){
             bool tempo = true;
@@ -199,15 +206,16 @@ contract sainoracle is ChainlinkClient{
                     tempo = false;
             }
             if (tempo){
-                (ratio, countir) = calculateRecursiveTRRatios(others[i], 5,api_key);
+                (ratio, countir, trustr) = calculateRecursiveTRRatios(others[i], 5,api_key);
                 in_out_ratio += ratio/others.length;
                 in_out_count += countir/others.length;
+                trustr += trust/others.length;
             }
         }
 
         visited = [""];
 
-        return (in_out_ratio, in_out_count, transactions);
+        return (in_out_ratio, in_out_count, trustr, transactions);
     }
 
     function calculateRecursiveTRRatios( string memory eth_addr, uint count, string calldata api_key) private returns (uint, uint){
@@ -237,6 +245,13 @@ contract sainoracle is ChainlinkClient{
 
         uint in_out_ratio = count*totalIn / totalOut;
         uint in_out_count = count*inCount / outCount;
+        uint trustr = 0;
+
+        if(blist.isBlacklisted(eth_addr)){
+            trustr += in_out_count*in_out_ratio/(count * 15);
+        }else{
+            trustr += in_out_ratio*in_out_count;
+        }
 
         for(uint i = 0; i < others.length; i++){
             bool tempo = true;
@@ -245,12 +260,13 @@ contract sainoracle is ChainlinkClient{
                     tempo = false;
             }
             if (tempo){
-                (ratio, countir) = calculateRecursiveTRRatios(others[i], count--,api_key);
+                (ratio, countir, trust) = calculateRecursiveTRRatios(others[i], count--,api_key);
                 in_out_ratio += ratio/others.length;
                 in_out_count += countir/others.length;
+                trustr += trust/others.length;
             }
         }
-        return (in_out_ratio, in_out_count);
+        return (in_out_ratio, in_out_count, trustr);
     }
 
 
