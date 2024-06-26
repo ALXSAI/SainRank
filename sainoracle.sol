@@ -4,7 +4,7 @@ pragma solidity ^0.8.0;
 import "@chainlink/contracts/src/v0.8/ChainlinkClient.sol";
 import "github.com/Arachnid/solidity-stringutils/strings.sol";
 
-interface Blacklist{
+contract Blacklist{
     mapping(address => bool) public isBlacklisted;
 }
 
@@ -22,6 +22,13 @@ contract sainoracle is ChainlinkClient{
 
     uint256 public volume;
 
+    uint totalIn;
+    uint totalOut;
+    uint inCount;
+    uint outCount;
+    uint trust;
+    uint dampening;
+
     address private oracle;
     bytes32 private jobId;
     uint256 private fee;
@@ -30,24 +37,30 @@ contract sainoracle is ChainlinkClient{
     string[] visited;
 
     // These variables are used for processing recursive data while lowering the amount of variables
-    uint totalIn =0;
-    uint totalOut =0;
-    uint inCount = 0;
-    uint outCount = 0;
-    uint trust = 0;
     uint ratio;
     uint countir;
 
     address public owner;
-    string private api_link = "https://api.etherscan.io/api";
-    string private tr_task_url_1 = "https://api.etherscan.io/api?module=account&action=txlist&address=";
-    string private tr_task_url_2 = "&startblock=0&endblock=99999999&page=1&offset=10&sort=asc&apikey=";
+    string private api_link;
+    string private tr_task_url_1;
+    string private tr_task_url_2;
 
     // storage for the transaction data, needs to be refreshed as the contract can only store one wallets data at a time
     TR[] private transactions;
 
     constructor (){
         owner = msg.sender;
+
+        totalIn =0;
+        totalOut =0;
+        inCount = 0;
+        outCount = 0;
+        trust = 0;
+        dampening = 1;
+
+        api_link = "https://api.etherscan.io/api";
+        tr_task_url_1 = "https://api.etherscan.io/api?module=account&action=txlist&address=";
+        tr_task_url_2 = "&startblock=0&endblock=99999999&page=1&offset=10&sort=asc&apikey=";
 
         blist = Blacklist(0x97044531D0fD5B84438499A49629488105Dc58e6);
 
@@ -61,6 +74,10 @@ contract sainoracle is ChainlinkClient{
     modifier onlyOwner(){
         require(msg.sender == owner);
         _;
+    }
+
+    function setDampening(uint256 _dampening) public{
+        dampening = _dampening;
     }
 
     // Utility function to parse a uint of any size from a string
@@ -220,7 +237,7 @@ contract sainoracle is ChainlinkClient{
 
         visited = [""];
 
-        return (in_out_ratio, in_out_count, trustr, transactions);
+        return (dampening*in_out_ratio, dampening*in_out_count, dampening*trustr, transactions);
     }
 
     function calculateRecursiveTRRatios( string memory eth_addr, uint count, string calldata api_key) private returns (uint, uint, uint){
