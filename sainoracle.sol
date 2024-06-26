@@ -168,7 +168,7 @@ contract sainoracle is ChainlinkClient{
         }
     }  
 
-    function calculateTRRatio(string calldata eth_addr, string calldata api_key) public returns(uint256, uint256){
+    function calculateTRRatio(string calldata eth_addr, string calldata api_key) public returns(uint256, uint256, TR[]){
         requestTransactionData(eth_addr, api_key);
         totalIn =0;
         totalOut =0;
@@ -207,10 +207,10 @@ contract sainoracle is ChainlinkClient{
 
         visited = [""];
 
-        return (in_out_ratio, in_out_count);
+        return (in_out_ratio, in_out_count, transactions);
     }
 
-    function calculateRecursiveTRRatios( string memory eth_addr, uint count, string calldata api_key) private returns (uint, uint, TR[]){
+    function calculateRecursiveTRRatios( string memory eth_addr, uint count, string calldata api_key) private returns (uint, uint){
         if(count == 0){
             return(0,0);
         }
@@ -250,7 +250,7 @@ contract sainoracle is ChainlinkClient{
                 in_out_count += countir/others.length;
             }
         }
-        return (in_out_ratio, in_out_count, transactions);
+        return (in_out_ratio, in_out_count);
     }
 
 
