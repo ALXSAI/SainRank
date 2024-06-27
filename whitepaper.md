@@ -1,5 +1,5 @@
 # Anonymous Blockchain Verification Algorithm: SainRank
-V.1.5
+V1.6
 
 ## Abstract
 
@@ -41,7 +41,7 @@ The fundamental idea behind SainRank is that a wallet's trustworthiness is influ
 
 The SainRank score T(w) for a wallet w can be represented as:
 
-T(w) = α * D(w) + (1 - α) * Σ(T(v) * W(v,w))
+T(w) = α * (D(w) + (1 - α) * Σ(T(v) * W(v,w)))
 
 Where:
 - α is a damping factor (typically set between 0.1 and 0.2)
@@ -82,6 +82,10 @@ The algorithm calculates the average of the largest 5% delta times between trans
 
 This metric provides insights into the wallet's transaction rhythm and can help identify unusual patterns that may require further scrutiny.
 
+### 3.4.3 AI clustering
+
+In the future a more comprehensive burst analysis could be implemented by using clustering AI and k nearest neighbours algorithms to group transactions into clusters around a timeframe and analyze the time delta between those clusters. This will provide a more accurate burst analysis as well as decrease the chances of gamification.
+
 ### 3.5 Blacklist Status
 
 The algorithm cross-references wallets against known blacklists to identify and penalize potentially malicious actors. This integration adds an extra layer of security by incorporating external threat intelligence.
@@ -112,6 +116,8 @@ To prevent artificial rating inflation and potential manipulation, SainRank impl
 ### 5.1 First-Occurrence Policy
 
 Wallets are only considered at the first level of recursion they appear in, eliminating the possibility of cyclic dependencies and ensuring that each wallet's influence is counted only once.
+
+This policy could be substituted with a Highest Weight policy, for this to be effective the entire recoursive transaction history as well as the weight they were recorded at would have to be kept in a bijective mapping with (address => weight, count, ratio, trust). In this case if a higher version of the wallet would be found in another transaction, it and all the weights depending on it would be increased accordingly.
 
 ### 5.2 Implementation
 
