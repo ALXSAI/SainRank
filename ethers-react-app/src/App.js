@@ -23,7 +23,7 @@ function App() {
     const [provider, setProvider] = useState(null);
     const [searching, setSearching] = useState(false);
     const [transactions, setTransactions] = useState([]);
-    const [ratios, setRatios] = useState([0, 0])
+    const [ratios, setRatios] = useState([0, 0, 0])
     const [eth_addr, setAddress] = useState("")
     const [api_key, setAPI] = useState("")
 
@@ -64,6 +64,7 @@ function App() {
     const interactWithContract = async () => {
         if (contract) {
             const result = await contract.calculateTRRatio(eth_addr, api_key);
+            setRatios(result)
             console.log(result);
             setSearching(true);
         }
@@ -72,7 +73,7 @@ function App() {
     const cancelAll = async () => {
         setSearching(false);
         setTransactions([]);
-        setRatios((0, 0));
+        setRatios([0, 0, 0]);
     }
 
     const handleAddr = (event) => {
@@ -87,7 +88,7 @@ function App() {
         <React.Fragment>
             <CssBaseline/>
             <Container maxWidth="sm">
-                <Box sx={{height: '100vh', m: 1, width: '25ch'}}
+                <Box sx={{m: 1, width: '25ch'}}
                      autoComplete="off">
                     <h1>SainRank Algorithm</h1>
                     <TextField id="addr_input" label="Outlined" variant="outlined" value={eth_addr}
@@ -129,6 +130,7 @@ function App() {
                                 <TableRow>
                                     <TableCell align="right">Transactions Value Ratio</TableCell>
                                     <TableCell align="right">Transactions Count</TableCell>
+                                    <TableCell align="right">Trust Ratio</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
@@ -136,6 +138,7 @@ function App() {
                                     >
                                         <TableCell align="right">{ratios[0]}</TableCell>
                                         <TableCell align="right">{ratios[1]}</TableCell>
+                                        <TableCell align="right">{ratios[2]}</TableCell>
                                     </TableRow>
                             </TableBody>
                         </Table>
